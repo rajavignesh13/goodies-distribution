@@ -1,0 +1,55 @@
+const readline = require("readline");
+const fs = require('fs');
+
+const q1 = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+
+var inputData = [];
+
+fs.readFile('input.txt', 'utf8', (err, data) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    // console.log(data);
+    const arr = data.split(/\r?\n/);
+    inputData = arr;
+});
+
+function getMultipleRandom(arr, num) {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  
+    return shuffled.slice(0, num);
+  }
+
+function init() {
+    
+    q1.question("Enter the Number of the employees ", function (answer) {
+        console.log(`Number of the employees ${answer}`);
+        const selectedGoodies =   getMultipleRandom(inputData, answer);      // inputData.slice(0, answer);
+
+        console.log('Here the goodies that are selected for distribution are:', selectedGoodies);
+
+        let regex = /\D/g;
+        let price = [];
+
+        selectedGoodies.map((val, index) => {
+            let numbers = val.replace(regex, "");
+            price.push(numbers);
+        })
+
+        let minValue = Math.min.apply(null, price);
+        let maxValue = Math.max.apply(null, price);
+        let result = maxValue - minValue;
+        console.log('And the difference between the chosen goodie with highest price and the lowest price is', result);
+
+        q1.resume();
+        setTimeout(() => {
+            init();
+        }, 1000);
+    });
+}
+
+init();
